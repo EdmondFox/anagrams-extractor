@@ -1,6 +1,7 @@
 import re
+open('my-anagrams.txt', 'w').close()
 
-file = open("anagrams-text.txt", "r")
+file = open("text.txt", "r")
 myText = file.read()
 file.close()
 
@@ -11,7 +12,7 @@ myList = re.compile(r'[^a-z]+').split(myText)
 myList = list(filter(None, myList))
 
 # my list without empty strings and words not sorted
-# print(myList)
+print(myList)
 
 # clone list without affecting the content of the original
 mySortedList = list(myList)
@@ -21,33 +22,36 @@ for idx in range(len(mySortedList)):
     mySortedList[idx] = ''.join(sorted(mySortedList[idx])).upper()
 
 # my list without empty strings and words sorted
-#print(mySortedList)
+# print(mySortedList)
 
 # list of indexes that would be skipped if the word was checked once
 myIndexes = []
 
-for idm in range(len(mySortedList)):
-    counter = 0
+for idx in range(len(mySortedList)):
+    count = 0
+    if idx in myIndexes:
+        continue
 
-    for idy in range(len(mySortedList)):
-        # skip this iteration if the word was checked once
-        if idy in myIndexes:
-            continue
-        if mySortedList[idm] == mySortedList[idy]:
+    myAnagrams =[]
 
-            counter += 1
-            if counter != 0:
-                print(str(idm) + " " + myList[idy] + " my index: " + str(idy) + " - counter is " + str(counter))
+    for idy in range(idx, len(mySortedList)):
+        if mySortedList[idx] == mySortedList[idy]:
+            # count += 1
+            myAnagrams.append(myList[idy])
+            if idy not in myIndexes:
+                myIndexes.append(idy)
+    if len(myAnagrams) > 1:
+        print(len(myAnagrams))
+        for x in range(len(myAnagrams)):
+            file = open("my-anagrams.txt", "a")
+            if x == len(myAnagrams) - 1:
+                file.write(str(myAnagrams[x]) + '\n')
+            else:
+                file.write(str(myAnagrams[x]).rstrip('\n') + ", ")
+            file.close()
+            print(myAnagrams[x])
 
-                file = open("my-anagrams.txt", "a")
-                if counter == 1:
-                    file.write("\n")
-                file.write(myList[idy] + " ")
-                file.close()
-
-                if idy not in myIndexes:
-                    myIndexes.append(idy)
-
-# print(myList)
 # print(sorted(myIndexes))
+
+
 
